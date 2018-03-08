@@ -1,6 +1,4 @@
 package lucene_test;
-
-
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 import org.apache.lucene.document.Document;
@@ -77,7 +75,7 @@ public class LuceneIndex {
     }
     //the following is using these index
     // 2. query
-    String querystr = args.length > 0 ? args[0] : "cav";
+    String querystr = args.length > 0 ? args[0] : "text:cav";
     //Query q = NumericRangeQuery.newIntRange("followers_c", 0, 200, true, true);
     // the "title" arg specifies the default field to use
     // when no field is explicitly specified in the query.
@@ -86,31 +84,35 @@ public class LuceneIndex {
     Query q = new MatchAllDocsQuery();
     Sort sort=new Sort(new SortField[] {SortField.FIELD_SCORE,new SortField("followers_c",SortField.Type.INT,true)});
   
-    //Query q2 = new QueryPa
+    Query q2 = new QueryParser("text",analyzer).parse(querystr);
+    
     // 3. search
-    int hitsPerPage = 10000;//how many pages wants to show
+    int hitsPerPage = 100;//how many pages wants to show
     IndexReader reader = DirectoryReader.open(index);
-    IndexSearcher searcher = new IndexSearcher(reader);
+    IndexSearcher searcher2 = new IndexSearcher(reader);
     TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
     
-    //searcher.search(q, collector);
-   // sort.setSort(new SortField("followers_c",Type.SCORE,false));
-    TopDocs num_hits = searcher.search(q, 14794, sort,true,true);
-  
+    searcher2.search(q2, collector);
     ScoreDoc[] hits = collector.topDocs().scoreDocs;
+    
+    IndexSearcher searcher = new IndexSearcher(reader);
+    TopDocs num_hits = searcher.search(q, 14794, sort,true,true);
+    
     
     // 4. display results
     System.out.println("Found " + hits.length + " hits.");
     System.out.println("Found " + num_hits.totalHits + " hits.");
+    
     for(int i=0;i<10;i++) {  
 	      Document doc=reader.document(num_hits.scoreDocs[i].doc);  
 	      //System.out.println(doc);  
 	      System.out.println(doc.get("followers_c") +"\t"+doc.get("name")+"\t"+doc.get("text") );
        }
+       
     for(int i=0;i<hits.length;++i) {
-      int docId = hits[i].doc;
-      Document d = searcher.doc(docId);
-      System.out.println((i + 1) + ". " + d.get("screen_name") + "\t   " + d.get("followers_c"));
+       int docId = hits[i].doc;
+       Document d = searcher2.doc(docId);
+      System.out.println((i + 1) + ". " + d.get("name") + "\t   " + d.get("text"));
     }
     // reader can only be closed when there
     // is no need to access the documents any more.
@@ -178,8 +180,7 @@ public class LuceneIndex {
           String friends_c =  json_user.get("friends_count").toString();
           String time = jsonOb1.get("created_at").toString();
           String text = jsonOb1.get("text").toString();
-          String id = jsonOb1.get("id").toString();
-          
+          String id = jsonOb1.get("id").toString();  
           /*
           System.out.println(location +" name: "+name +" @" + friends_c +" " + followers_c
         		  			+" "+time+ "\\\\ " + text   );
