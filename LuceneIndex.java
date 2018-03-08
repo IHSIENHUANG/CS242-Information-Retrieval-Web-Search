@@ -72,6 +72,7 @@ public class LuceneIndex {
 			e.printStackTrace();
 		}
     	w.close();
+    	System.out.println("finish the building of csv");
     }
     //the following is using these index
     // 2. query
@@ -166,10 +167,6 @@ public class LuceneIndex {
           }
           if(!json.contains("delete"))
           {
-         // System.out.println(json);
-         // System.out.println(round+"-----------------");
-          //if(round%500==0)
-        	//  System.out.println(round);
           JSONObject jsonOb1= new JSONObject(json);// it means data is {}
           JSONObject json_user = (JSONObject)jsonOb1.getJSONObject("user");//lawyer
           JSONObject json_entity = (JSONObject)jsonOb1.getJSONObject("entities");//lawyer
@@ -181,10 +178,6 @@ public class LuceneIndex {
           String time = jsonOb1.get("created_at").toString();
           String text = jsonOb1.get("text").toString();
           String id = jsonOb1.get("id").toString();  
-          /*
-          System.out.println(location +" name: "+name +" @" + friends_c +" " + followers_c
-        		  			+" "+time+ "\\\\ " + text   );
-        		*/  			
           addDoc(w, name, followers_c,friends_c,text,time,hash_tag,location,id);
           }
           json = br.readLine(); // 一次读入一行数据
