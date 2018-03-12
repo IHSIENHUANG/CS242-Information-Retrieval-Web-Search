@@ -16,19 +16,25 @@ else:
     #num = sys.argv[1]
     #data_list = [eval(num)]
     data_list = [sys.argv[1]]
-    data= session.execute("SELECT * FROM map_reduce WHERE word= %s",data_list)
+    data= session.execute("SELECT * FROM stem_index WHERE word= %s",data_list)
     for row in data:
+        print("whole data {}").format(row)
         DF = row[1].split(";")
         #print (DF)
         for df in DF:
             #print (df)
             df = df.split(":")
-            print ("doc ID:  {}").format( df[0])
+            #print ("doc ID:  {}").format( df[0])
             if len(df[0]) >=1:
-                data_list = [eval(df[0])]
-                doc_datas = session.execute("SELECT context FROM data WHERE doc_id= %s",data_list)
+                data_list = [eval(df[0])]#take the doc id to select from database
+                doc_datas = session.execute("SELECT doc_id,context,followers_c,location,time FROM data WHERE doc_id= %s",data_list)
                 for doc_data in doc_datas:
-                    print (doc_data)
+                    print ("DATA:")
+                    print (doc_data[0])#id
+                    print (doc_data[1])#context
+                    print (doc_data[2])#follower_c
+                    print (doc_data[3])#locatino
+                    print (doc_data[4])#time
         D_POS = row[2].split(";")
         TOTAL = row[3]       
 
