@@ -12,3 +12,9 @@
 + data_build.py : build data database
 + data_select.py: search the parameter from inverted index and get the docID and then go to search the database to get the context
 + index_build.py: build inverted index database
+
+## DATABASE：
++ data : stroe the original data from json
++ map_reduce: store the inverted_index after map reduce
++ stem_index: store the data, proecessed by stem
++ location: map reduce processing on location
