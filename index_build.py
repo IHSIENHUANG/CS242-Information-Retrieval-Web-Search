@@ -20,8 +20,11 @@ for row in rows:
     
     #session.execute("INSERT INTO data(doc_id,name)VALUES("+var0+",'"+var1+"')")
     #session.execute("INSERT INTO data(doc_id,name)VALUES(%s,%s)",(data_list))
-filename = 'stem.txt'
-with open('stem.txt', 'r') as f: 
+filename = 'location'
+#filename = "part-r-00000"
+#filename = "output.txt"
+#filename = "stem.txt"
+with open(filename, 'r') as f: 
     var=0
     data = f.readlines()
     for line in data:
@@ -49,6 +52,7 @@ with open('stem.txt', 'r') as f:
         #if var > 5:
         #    exit()           
         #session.execute("INSERT INTO map_reduce(word,doc_f,doc_index,total)VALUES(%s,%s,%s,%s)",data_list)    
-        session.execute("INSERT INTO stem_index(word,doc_f,doc_index,total)VALUES(%s,%s,%s,%s)",data_list)    
+        #session.execute("INSERT INTO stem_index(word,doc_f,doc_index,total)VALUES(%s,%s,%s,%s)",data_list)    
+        session.execute("INSERT INTO location(word,doc_f,doc_index,total)VALUES(%s,%s,%s,%s)",data_list)    
     print("sucess") 
     exit()    
